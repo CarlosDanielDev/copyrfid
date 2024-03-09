@@ -5,6 +5,7 @@
 #include "SoundController.h"
 #include "Global.h"
 #include "MFRC522_I2C.h"
+#include "localization.h"
 
 MFRC522 mfrc522(0x28);
 
@@ -17,7 +18,7 @@ void RFIDController::readCard() {
   DisplayController::displayHeaderRfid();
   DisplayController::displayWriteMode();
   DisplayController::displayCardInfo(mfrc522.PICC_GetTypeName(piccType));
-  const char ERROR_MESSAGE[] = "Not MIFARE Classic!";
+  const char ERROR_MESSAGE[] = TXT_RFID_ERROR_MESSAGE;
   
   if (
     !(
@@ -49,9 +50,9 @@ void RFIDController::writeCard() {
   DisplayController::displayReadMode();
 
   if (mfrc522.MIFARE_SetUid(UID, (byte)UIDLength, true)) {
-    DisplayController::displayMessageAndSound(F("Wrote UID."), true);
+    DisplayController::displayMessageAndSound(F(TXT_RFID_WROTE_UID), true);
   } else {
-    DisplayController::displayMessageAndSound(F("Write failed."), false);
+    DisplayController::displayMessageAndSound(F(TXT_RFID_FAILED_WRITE), false);
   }
 
   mfrc522.PICC_HaltA();
