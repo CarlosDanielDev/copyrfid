@@ -1,6 +1,6 @@
 # RFID2
 
-<img src="./img.png" width="200" height="400" alt="demo" />
+<img src="./img.png" width="200" height="300" alt="demo" />
 
 ## Overview
 
@@ -26,6 +26,17 @@ To set up this project, you will need the following hardware:
 2. Upload the provided code to your M5StickC Plus using the Arduino IDE or PlatformIO.
 3. Connect the MFRC522 RFID module to your M5StickC Plus.
 4. Power on the M5StickC Plus.
+
+### Arduino CLI
+
+```bash
+# compile (you need to specify the folder)
+arduino-cli compile --fqbn m5stack:esp32:m5stack_stickc_plus2 -e --build-property build.partitions=huge_app --build-property upload.maximum_size=3145728 ./copyrfid/copyrfid.ino
+
+# upload (you need to check if the usb port is correct, and don't forget to name correctly the sketch "copyrfid")
+arduino-cli upload -p /dev/tty.{CHANGE ME TO YOUR PORT} --fqbn m5stack:esp32:m5stack_stickc_plus2 copyrfid
+```
+
 
 ## Usage
 
