@@ -11,6 +11,7 @@ The project allows you to read and clone MIFARE Classic RFID cards using an MFRC
 
 - Read and display information from MIFARE Classic RFID cards.
 - Clone MIFARE Classic RFID cards.
+- Multi-language (setup on localization.h)
 
 ## Hardware Requirements
 

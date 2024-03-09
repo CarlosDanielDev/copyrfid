@@ -3,6 +3,7 @@
 #include "Global.h"
 #include <Arduino.h>
 #include <M5StickCPlus2.h>
+#include "localization.h"
 
 const uint8_t DEFAULT_TEXT_SIZE = 1;
 const int ERROR_MESSAGE_POSITION_X = 0;
@@ -130,7 +131,7 @@ void DisplayController::displayCardInfo(const __FlashStringHelper* message) {
 
 void DisplayController::displayUID() {
   DisplayController::setupDisplay(1, VALID_UID_COLOR);
-  M5.Lcd.print(F("User ID:"));
+  M5.Lcd.print(F(TXT_RFID_UID));
   for (byte i = 0; i < UIDLength; i++) {
     if (UID[i] < 0x10) {
       M5.Lcd.print("0");
@@ -143,14 +144,14 @@ void DisplayController::displayUID() {
 
 void DisplayController::displayReadMode() {
   DisplayController::displayHeaderRfid();
-  DisplayController::displayRfidMessage(F("(Press 'A' to write after reading...)"), 1);
-  DisplayController::displayRfidMessage(F("Ready to READ..."), 1);
+  DisplayController::displayRfidMessage(F(TXT_RFID_PRESS_A_WRITE), 1);
+  DisplayController::displayRfidMessage(F(TXT_RFID_READY_READ), 1);
 }
 
 void DisplayController::displayWriteMode() {
   DisplayController::displayHeaderRfid();
-  DisplayController::displayRfidMessage(F("(Press 'A' to read a new card: )"), 1);
-  DisplayController::displayRfidMessage(F("Ready to WRITE..."), 1);
+  DisplayController::displayRfidMessage(F(TXT_RFID_PRESS_A_READ), 1);
+  DisplayController::displayRfidMessage(F(TXT_RFID_READY_WRITE), 1);
   DisplayController::displayUID();
 }
 
