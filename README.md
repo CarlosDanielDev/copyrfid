@@ -1,5 +1,7 @@
 # RFID2
 
+<img src="./img.png" width="200" height="400" alt="demo" />
+
 ## Overview
 
 This RFID2 project is designed for the M5StickC Plus, a portable and versatile ESP32-based development kit with a built-in display. 
