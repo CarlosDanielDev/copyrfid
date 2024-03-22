@@ -1,6 +1,7 @@
-#include "SoundController.h"
 #include <Arduino.h>
 #include <M5StickCPlus2.h>
+
+#include "SoundController.h"
 
 #define SPEAKER M5.Speaker
 #define NOTE_G5  784

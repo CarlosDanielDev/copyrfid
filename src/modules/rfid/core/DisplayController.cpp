@@ -1,22 +1,33 @@
-#include "DisplayController.h"
-#include "SoundController.h"
-#include "Global.h"
 #include <Arduino.h>
 #include <M5StickCPlus2.h>
-#include "localization.h"
 
-const uint8_t DEFAULT_TEXT_SIZE = 1;
+#include "DisplayController.h"
+#include "SoundController.h"
+#include "../shared/Global.h"
+#include "../../../i18n/i18n.h"
+
+const uint8_t DEFAULT_TEXT_SIZE = 2;
+const uint8_t DEFAULT_BAT_TEXT_SIZE = 1;
+const uint8_t DEFAULT_TITLE_TEXT_SIZE = 3;
+const uint8_t DEFAULT_LINE_TEXT_SIZE = 1;
+const uint8_t DEFAULT_PERCENT_LENGTH = 4;
+const uint8_t DEFAULT_BAT_INFO_LENGTH = 9;
+const uint8_t DEFAULT_ROTATION = 3;
+
 const int ERROR_MESSAGE_POSITION_X = 0;
 const int ERROR_MESSAGE_POSITION_Y = 80;
 const uint16_t ERROR_TEXT_COLOR = RED;
 const uint16_t DEFAULT_TEXT_COLOR = GREEN;
 const uint16_t VALID_UID_COLOR = BLUE;
+const uint16_t WARNING_COLOR = YELLOW;
+const uint16_t BACKGROUND_COLOR = BLACK;
+
 
 void DisplayController::initialize() {
-  M5.Lcd.setRotation(1); 
-  M5.Lcd.fillScreen(BLACK); 
+  M5.Lcd.setRotation(DEFAULT_ROTATION); 
+  M5.Lcd.fillScreen(BACKGROUND_COLOR); 
   M5.Lcd.setCursor(0, 0); 
-  M5.Lcd.setTextSize(1); 
+  M5.Lcd.setTextSize(DEFAULT_TEXT_SIZE); 
 }
 
 void DisplayController::cls() {
@@ -38,25 +49,25 @@ void DisplayController::displayBatteryLevel() {
 
   uint16_t batteryTextColor;
   if (batteryLevel <= 20) {
-    batteryTextColor = RED; 
+    batteryTextColor = ERROR_TEXT_COLOR; 
   } else if (batteryLevel <= 50) {
-    batteryTextColor = YELLOW;  
+    batteryTextColor = WARNING_COLOR;  
   } else if (batteryLevel <= 80 && batteryLevel > 50) {
-    batteryTextColor = BLUE; 
+    batteryTextColor = VALID_UID_COLOR; 
   } else {
-    batteryTextColor = GREEN; 
+    batteryTextColor = DEFAULT_TEXT_COLOR; 
   }
 
-  M5.Lcd.setTextSize(1);  
-  int batteryStrLen = String(batteryLevel).length() + 4;
-  int x = M5.Lcd.width() - (batteryStrLen * 9); 
+  M5.Lcd.setTextSize(DEFAULT_BAT_TEXT_SIZE);  
+  int batteryStrLen = String(batteryLevel).length() + DEFAULT_PERCENT_LENGTH;
+  int x = M5.Lcd.width() - (batteryStrLen * DEFAULT_BAT_INFO_LENGTH); 
   int y = 0; 
 
-  M5.Lcd.setTextColor(batteryTextColor, BLACK); 
+  M5.Lcd.setTextColor(batteryTextColor, BACKGROUND_COLOR); 
   M5.Lcd.setCursor(x, y);
   M5.Lcd.printf("Bat: %d%%", batteryLevel); 
 
-  M5.Lcd.setTextColor(DEFAULT_TEXT_COLOR, BLACK);
+  M5.Lcd.setTextColor(DEFAULT_TEXT_COLOR, BACKGROUND_COLOR);
 
 }
 
@@ -64,14 +75,14 @@ void DisplayController::displayGradientText(const char* text) {
   uint16_t colors[] = {RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA};
 
   int numOfColors = sizeof(colors) / sizeof(colors[0]);
-  M5.Lcd.setTextSize(3);  
+  M5.Lcd.setTextSize(DEFAULT_TITLE_TEXT_SIZE);  
   int x = 0;
   int y = 10; 
   int characterWidth = 18; 
 
   for (int i = 0; text[i] != '\0'; i++) {
     uint16_t color = colors[i % numOfColors];
-    M5.Lcd.setTextColor(color, BLACK); 
+    M5.Lcd.setTextColor(color, BACKGROUND_COLOR); 
 
     M5.Lcd.setCursor(x, y);
     M5.Lcd.print(text[i]);
@@ -80,7 +91,7 @@ void DisplayController::displayGradientText(const char* text) {
   }
 
   M5.Lcd.setTextColor(WHITE, BLACK);
-  DisplayController::displayRfidMessage(F(""), 3);
+  DisplayController::displayRfidMessage(F(""), DEFAULT_TITLE_TEXT_SIZE);
 }
 
 void DisplayController::displayGradientLine() {
@@ -90,7 +101,7 @@ void DisplayController::displayGradientLine() {
   int numOfCharacters = screenWidth / characterWidth;
   int charactersPerColor = numOfCharacters / (sizeof(colors) / sizeof(colors[0]));
 
-  M5.Lcd.setTextSize(1);
+  M5.Lcd.setTextSize(DEFAULT_LINE_TEXT_SIZE);
   
   int charCount = 0; 
   for (uint16_t color : colors) {
@@ -106,14 +117,14 @@ void DisplayController::displayGradientLine() {
     }
   }
   M5.Lcd.setTextColor(WHITE, BLACK);   
- DisplayController::displayRfidMessage(F(""), 1);
+ DisplayController::displayRfidMessage(F(""), DEFAULT_TEXT_SIZE);
 }
 
 void DisplayController::displayHeaderRfid() {
   DisplayController::displayBatteryLevel();
-  M5.Lcd.setTextSize(3);
+  M5.Lcd.setTextSize(DEFAULT_TITLE_TEXT_SIZE);
   M5.Lcd.setCursor(0, 0);
-  DisplayController::displayGradientText("RFID2");
+  DisplayController::displayGradientText("Copyrfid");
   DisplayController::displayGradientLine();
 }
 
@@ -130,34 +141,34 @@ void DisplayController::displayCardInfo(const __FlashStringHelper* message) {
 }
 
 void DisplayController::displayUID() {
-  DisplayController::setupDisplay(1, VALID_UID_COLOR);
-  M5.Lcd.print(F(TXT_RFID_UID));
-  for (byte i = 0; i < UIDLength; i++) {
-    if (UID[i] < 0x10) {
-      M5.Lcd.print("0");
+  DisplayController::setupDisplay(DEFAULT_TEXT_SIZE, VALID_UID_COLOR);
+  if(UIDLength > 0 ) {
+    M5.Lcd.print(F(TXT_RFID_UID));
+    for (byte i = 0; i < UIDLength; i++) {
+      if (UID[i] < 0x10) {
+        M5.Lcd.print("0");
+      }
+      M5.Lcd.print(UID[i], HEX);
     }
-    M5.Lcd.print(UID[i], HEX);
+    M5.Lcd.println();
   }
-  M5.Lcd.println();
-  DisplayController::setupDisplay(1, DEFAULT_TEXT_COLOR);  
+  DisplayController::setupDisplay(DEFAULT_TEXT_SIZE, DEFAULT_TEXT_COLOR);  
 }
 
 void DisplayController::displayReadMode() {
   DisplayController::displayHeaderRfid();
-  DisplayController::displayRfidMessage(F(TXT_RFID_PRESS_A_WRITE), 1);
-  DisplayController::displayRfidMessage(F(TXT_RFID_READY_READ), 1);
+  DisplayController::displayRfidMessage(F(TXT_RFID_PRESS_A_READ), DEFAULT_BAT_TEXT_SIZE);
 }
 
 void DisplayController::displayWriteMode() {
   DisplayController::displayHeaderRfid();
-  DisplayController::displayRfidMessage(F(TXT_RFID_PRESS_A_READ), 1);
-  DisplayController::displayRfidMessage(F(TXT_RFID_READY_WRITE), 1);
+  DisplayController::displayRfidMessage(F(TXT_RFID_PRESS_A_WRITE), DEFAULT_BAT_TEXT_SIZE);
   DisplayController::displayUID();
 }
 
 void DisplayController::displayMessageAndSound(const __FlashStringHelper* message, bool isSuccess) {
   uint16_t textColor = isSuccess ? VALID_UID_COLOR : ERROR_TEXT_COLOR;
-  DisplayController::setupDisplay(1, textColor);
+  DisplayController::setupDisplay(DEFAULT_TEXT_SIZE, textColor);
   M5.Lcd.println();
   M5.Lcd.println(message);
   if (isSuccess) {
@@ -165,5 +176,5 @@ void DisplayController::displayMessageAndSound(const __FlashStringHelper* messag
   } else {
     SoundController::playError();
   }
-  DisplayController::setupDisplay(1, DEFAULT_TEXT_COLOR); 
+  DisplayController::setupDisplay(DEFAULT_TEXT_SIZE, DEFAULT_TEXT_COLOR); 
 }

@@ -1,10 +1,11 @@
 #include <M5StickCPlus2.h>
-
 #include <Arduino.h>
-#include "DisplayController.h"
-#include "Global.h"
-#include "SoundController.h"
+
 #include "StateController.h"
+#include "core/DisplayController.h"
+#include "shared/Global.h"
+#include "core/SoundController.h"
+
 
 void StateController::switchToReadMode() {
   SoundController::playReady();

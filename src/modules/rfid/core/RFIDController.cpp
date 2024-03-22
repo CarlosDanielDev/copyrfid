@@ -1,11 +1,13 @@
 #include <Wire.h>
 #include <Arduino.h>
+
 #include "RFIDController.h"
 #include "DisplayController.h"
 #include "SoundController.h"
-#include "Global.h"
+
+#include "../shared/Global.h"
 #include "MFRC522_I2C.h"
-#include "localization.h"
+#include "../../../i18n/i18n.h"
 
 MFRC522 mfrc522(0x28);
 
@@ -16,7 +18,9 @@ void RFIDController::initialize() {
 void RFIDController::readCard() {
   byte piccType = mfrc522.PICC_GetType(mfrc522.uid.sak);
   DisplayController::displayHeaderRfid();
-  DisplayController::displayWriteMode();
+  DisplayController::displayReadMode();
+  DisplayController::displayUID();
+
   DisplayController::displayCardInfo(mfrc522.PICC_GetTypeName(piccType));
   const char ERROR_MESSAGE[] = TXT_RFID_ERROR_MESSAGE;
   
@@ -47,7 +51,7 @@ void RFIDController::readCard() {
 
 void RFIDController::writeCard() {
   DisplayController::displayHeaderRfid();
-  DisplayController::displayReadMode();
+  DisplayController::displayWriteMode();
 
   if (mfrc522.MIFARE_SetUid(UID, (byte)UIDLength, true)) {
     DisplayController::displayMessageAndSound(F(TXT_RFID_WROTE_UID), true);

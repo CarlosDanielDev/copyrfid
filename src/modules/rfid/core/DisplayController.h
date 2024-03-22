@@ -1,6 +1,5 @@
 #ifndef DISPLAYCONTROLLER_H
 #define DISPLAYCONTROLLER_H
-#include <Arduino.h>
 
 class DisplayController {
 public:
@@ -20,6 +19,7 @@ public:
                                     bool isSuccess);
   static void displayReadMode();
   static void displayWriteMode();
+
 };
 
 #endif
