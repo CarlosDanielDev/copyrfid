@@ -4,7 +4,7 @@
 
 ## Overview
 
-This RFID2 project is designed for the M5StickC Plus, a portable and versatile ESP32-based development kit with a built-in display. 
+This project is designed for the M5StickC Plus, a portable and versatile ESP32-based development kit with a built-in display. 
 The project allows you to read and clone MIFARE Classic RFID cards using an MFRC522 RFID module and the M5StickC Plus.
 
 ## Features
@@ -64,7 +64,8 @@ This project is licensed under the [MIT License](LICENSE).
 - This project is based on the MFRC522 library.
 - Developed for educational and experimental purposes.
 ---
-- Created originally by Sarah-C, in the project called M5Stack_Core_MFRC522_RFID_Cloner
+
+- Created originally by [Sarah-C](https://github.com/Sarah-C), in the project called [M5Stack_Core_MFRC522_RFID_Cloner](https://github.com/Sarah-C/M5Stack_Core_MFRC522_RFID_Cloner)
 
 ## Credits
 
@@ -72,4 +73,6 @@ This project is licensed under the [MIT License](LICENSE).
 - [Repo ref](https://github.com/Sarah-C/M5Stack_Core_MFRC522_RFID_Cloner)
 
 
-<a href='https://ko-fi.com/B0B3W9GEL' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+<a href='https://ko-fi.com/B0B3W9GEL' target='_blank'>
+    <img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+</a>
